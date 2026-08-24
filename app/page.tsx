@@ -1,9 +1,12 @@
 import Container from "@/app/_components/container";
+import Intro from "./_components/intro";
 export default function Home() {
   return (
     <main>
       <Container>
-        <p> hi how are you doing</p>
+        <Intro />
+        {/* <HeroPost /> */}
+        {/* {morePosts.length > 0 && <MoreStories posts={morePosts} />} */}
       </Container>
     </main>
   );
