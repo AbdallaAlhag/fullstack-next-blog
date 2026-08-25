@@ -26,8 +26,11 @@ export function generateFinalizedPosts(
     if (!pfpLookup.has(p.userId)) {
       pfpLookup.set(p.userId, faker.image.personPortrait());
     }
+
+    const newParagraph = faker.lorem.paragraphs(5);
+
     const segmenter = new Intl.Segmenter("en", { granularity: "sentence" });
-    const segments = Array.from(segmenter.segment(p.body));
+    const segments = Array.from(segmenter.segment(newParagraph));
 
     // generate excerpt
     let excerpt = segments
@@ -52,6 +55,7 @@ export function generateFinalizedPosts(
       ...p,
       imageUrl: imageUrl,
       date: formattedDate,
+      body: newParagraph,
       author: {
         name: userLookup.get(p.userId),
         picture: pfpLookup.get(p.userId),
