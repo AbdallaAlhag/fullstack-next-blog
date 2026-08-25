@@ -1,6 +1,11 @@
 import Container from "@/app/_components/container";
 import Intro from "./_components/intro";
-export default function Home() {
+import { getAllPosts } from "./lib/api";
+export default async function Home() {
+  const allPosts = await getAllPosts();
+  // const heroPost = allPost[0];
+  // const morePosts = allPosts.slice(1);
+  console.log(allPosts);
   return (
     <main>
       <Container>
