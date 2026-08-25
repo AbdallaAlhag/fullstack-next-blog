@@ -1,5 +1,6 @@
 import { Author } from "@/app/interfaces/author";
-import Image from "next/image";
+import CoverImage from "@/app/_components/cover-image";
+import Avatar from "@/app/_components/avatar";
 type Props = {
   title: string;
   imageUrl: string;
@@ -13,12 +14,10 @@ export default function HeroPost(props: Props) {
   return (
     <section className="flex flex-col gap-10 mb-8 md:md-16">
       <div className="relative w-full h-100">
-        <Image
+        <CoverImage
           src={props.imageUrl}
-          fill
-          alt={`${props.title} cover image`}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="grayscale-85 object-cover"
+          title={props.title}
+          slug={props.slug}
         />
       </div>
       <div className="flex flex-row justify-between  gap-5">
@@ -33,13 +32,7 @@ export default function HeroPost(props: Props) {
             <p className="text-lg leading-relaxed">{props.excerpt}</p>
           </div>
           <div className="flex flex-row gap-5 items-center">
-            <Image
-              src={props.author.picture}
-              width={50}
-              height={50}
-              alt={`${props.author} profile picture`}
-              className="rounded-3xl grayscale-85"
-            />
+            <Avatar picture={props.author.picture} author={props.author.name} />
             <h1 className="font-bold text-lg">{props.author.name}</h1>
           </div>
         </div>
