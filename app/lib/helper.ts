@@ -44,7 +44,7 @@ export function generateFinalizedPosts(
     // generate unique slug
     const slug = `${p.id}-${generateSlug(p.title)}`;
 
-    const imageUrl = `https://picsum.photos/seed/picsum/${p.userId}/${p.id}`;
+    const imageUrl = new URL("https://picsum.photos/1200/800").href;
     const randomDate = faker.date.past();
     const formattedDate = new Date(randomDate).toLocaleDateString("en-US", {
       month: "long",
