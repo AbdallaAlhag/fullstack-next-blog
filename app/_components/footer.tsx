@@ -6,7 +6,7 @@ export default function Footer() {
       <Container>
         <div className="flex flex-col gap-10 items-center justify-center py-27">
           <h1 className="text-3xl font-black">
-            Statically Generated with Next.js
+            Dynamically Generated with Next.js
           </h1>
           <div className="flex justify-center items-center gap-10 flex-col lg:flex-row lg:gap-10 ">
             <a

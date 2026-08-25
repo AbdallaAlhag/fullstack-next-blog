@@ -3,7 +3,7 @@ export default function Intro() {
     <section className="mt-16 mb-16 flex items-center flex-col md:justify-between md:flex-row gap-10">
       <h1 className="text-8xl font-black">Blog.</h1>
       <h4 className="text-center md:text-left text-lg mt-5">
-        A statically generated blog example using{" "}
+        A dynamically generated blog example using{" "}
         <a
           href="https://github.com/AbdallaAlhag/simple-blog-app"
           target="_blank"
