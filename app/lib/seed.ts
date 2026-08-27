@@ -26,19 +26,38 @@ export async function getAllPosts(): Promise<Post[]> {
 
 async function main() {
   console.log("🌱 Starting database seed...");
-
   try {
-    // Optional: Clear table first if you want a fresh start
-    // await sql('TRUNCATE TABLE products RESTART IDENTITY CASCADE;');
-    const products = await getAllPosts();
-    // Seed multiple objects efficiently using an array map loop
-    for (const item of products) {
-      await sql(
-        `INSERT INTO products (title, price, stock) 
-         VALUES ($1, $2, $3)
-         ON CONFLICT (title) DO NOTHING`,
-        [item.title, item.price, item.stock],
+    const postsToSeed = await getAllPosts();
+
+    console.log("💥 Resetting posts table...");
+    await sql`DROP TABLE IF EXISTS posts CASCADE;`;
+
+    // 2. Create the fresh table definition using UUID as the Primary Key
+    console.log("🏗️ Creating table with UUID schema...");
+    await sql`
+      CREATE TABLE posts (
+        id UUID PRIMARY KEY,
+        author_name VARCHAR(255) NOT NULL,
+        author_picture TEXT,
+        body TEXT NOT NULL,
+        date TIMESTAMPTZ,
+        excerpt TEXT,
+        image_url TEXT,
+        slug VARCHAR(255) UNIQUE NOT NULL,
+        title VARCHAR(255) NOT NULL,
+        user_id INT NOT NULL
       );
+    `;
+
+    for (const post of postsToSeed) {
+      await sql`
+    INSERT INTO posts (
+      id, author_name, author_picture, body, date, excerpt, image_url, slug, title, user_id
+    ) VALUES (
+      ${post.id}, ${post.author.name}, ${post.author.picture}, ${post.body}, ${post.date}, ${post.excerpt}, ${post.imageUrl}, ${post.slug}, ${post.title}, ${post.userId}
+    ) 
+    ON CONFLICT (slug) DO NOTHING
+  `;
     }
 
     console.log("✅ Database successfully seeded!");
