@@ -46,11 +46,12 @@ export function generateFinalizedPosts(
 
     const imageUrl = new URL(`https://picsum.photos/id/${p.id}/1300/630`).href;
     const randomDate = faker.date.past();
-    const formattedDate = new Date(randomDate).toLocaleDateString("en-US", {
-      month: "long",
-      day: "numeric",
-      year: "numeric",
-    });
+    const formattedDate = new Date(randomDate).getTime();
+    // const formattedDate = new Date(randomDate).toLocaleDateString("en-US", {
+    //   month: "long",
+    //   day: "numeric",
+    //   year: "numeric",
+    // });
     return {
       ...p,
       id: crypto.randomUUID(),

@@ -6,7 +6,7 @@ export type Post = {
   title: string;
   body: string;
   imageUrl: string;
-  date: string;
+  date: number;
   author: Author;
   excerpt: string;
   slug: string;

@@ -2,10 +2,11 @@ import { Author } from "@/app/interfaces/author";
 import CoverImage from "@/app/_components/cover-image";
 import Avatar from "@/app/_components/avatar";
 import Link from "next/link";
+import DateFormatter from "./date-formatter";
 type Props = {
   title: string;
   imageUrl: string;
-  date: string;
+  date: number;
   author: Author;
   slug: string;
   excerpt: string;
@@ -33,7 +34,10 @@ export default function HeroPost(props: Props) {
               {props.title}
             </Link>
           </h3>
-          <h4 className="mb-4 md:mb-0 text-lg">{props.date}</h4>
+          <h4 className="mb-4 md:mb-0 text-lg">
+            {" "}
+            <DateFormatter date={props.date} />
+          </h4>
         </div>
         <div>
           <p className="text-lg leading-relaxed mb-4">{props.excerpt}</p>

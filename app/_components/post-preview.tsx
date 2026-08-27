@@ -2,6 +2,7 @@ import { type Post } from "@/app/interfaces/post";
 import CoverImage from "./cover-image";
 import Avatar from "./avatar";
 import Link from "next/link";
+import DateFormatter from "./date-formatter";
 type Props = {
   post: Post;
 };
@@ -17,7 +18,9 @@ export default function PostPreview({ post }: Props) {
           {post.title}
         </Link>
       </h3>
-      <h3 className="text-lg mb-4">{post.date}</h3>
+      <h3 className="text-lg mb-4">
+        <DateFormatter date={post.date} />
+      </h3>
       <p className="text-lg leading-relaxed mb-4">{post.excerpt}</p>
       <Avatar picture={post.author.picture} author={post.author.name} />
     </section>
