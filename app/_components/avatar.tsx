@@ -5,12 +5,15 @@ type Props = {
 };
 export default function Avatar({ picture, author }: Props) {
   return (
-    <Image
-      src={picture}
-      width={50}
-      height={50}
-      alt={`${author} profile picture`}
-      className="rounded-3xl grayscale-85"
-    />
+    <div className="flex items-center">
+      <Image
+        src={picture}
+        width={50}
+        height={50}
+        alt={`${author} profile picture`}
+        className="mr-4 rounded-full grayscale-85"
+      />
+      <div className="text-xl font-bold">{author}</div>
+    </div>
   );
 }
