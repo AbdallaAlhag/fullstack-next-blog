@@ -3,11 +3,14 @@ import Intro from "@/app/_components/intro";
 import { getAllPosts } from "@/app/lib/api";
 import HeroPost from "@/app/_components/hero-post";
 import MoreStories from "@/app/_components/more-stories";
+import { Post } from "@/app/interfaces/post";
+
 export default async function Home() {
   const allPosts = await getAllPosts();
-  const heroPost = allPosts[0];
-  const morePosts = allPosts.slice(1, 3);
   console.log(allPosts);
+  const randomizedPosts = shuffle(allPosts);
+  const heroPost = randomizedPosts[0];
+  const morePosts = randomizedPosts.slice(1, 3);
   return (
     <main>
       <Container>
@@ -24,4 +27,14 @@ export default async function Home() {
       </Container>
     </main>
   );
+}
+
+function shuffle(array: Post[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    // Generate a random index from 0 to i
+    const j = Math.floor(Math.random() * (i + 1));
+    // Swap elements using array destructuring
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

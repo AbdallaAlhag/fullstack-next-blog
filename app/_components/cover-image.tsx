@@ -13,7 +13,7 @@ export default function CoverImage({ title, src, slug }: Props) {
       width={1300}
       height={630}
       alt={`${title} cover image`}
-      className={cn("greyscale-85 shadow-sm w-full", {
+      className={cn("grayscale-85 shadow-sm w-full", {
         "hover:shadow-lg transition-shadow duration-200": slug,
       })}
     />

@@ -2,7 +2,7 @@ import { Author } from "./author";
 
 export type Post = {
   userId: number;
-  id: number;
+  id: string;
   title: string;
   body: string;
   imageUrl: string;
