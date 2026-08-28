@@ -12,7 +12,7 @@ export default function MoreStories({ posts, homePage = false }: Props) {
       {homePage && (
         <h1 className="text-5xl md:text-7xl tracking-tigher leading-tight font-bold mb-8">
           <Link href={"/more-posts"} className="hover:underline">
-            More Stories &gt;&gt;
+            More Stories»
           </Link>
         </h1>
       )}
