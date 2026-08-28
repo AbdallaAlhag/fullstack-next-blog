@@ -7,7 +7,7 @@ import { Post } from "@/app/interfaces/post";
 
 export default async function Home() {
   const allPosts = await getAllPosts();
-  console.log(allPosts);
+  // console.log(allPosts);
   const randomizedPosts = shuffle(allPosts);
   const heroPost = randomizedPosts[0];
   const morePosts = randomizedPosts.slice(1, 3);

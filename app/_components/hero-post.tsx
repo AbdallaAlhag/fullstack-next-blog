@@ -25,17 +25,15 @@ export default function HeroPost(props: Props) {
 
       <div className="md:grid md:grid-cols-2 md:gap-x-16 lg:gap-x-8 mb-20 md:mb-28">
         <div>
-          {/* TODO: fix href */}
           <h3 className="mb-4 text-4xl lg:text-5xl leading-tight">
             <Link
-              href={"/"}
+              href={`posts/${props.slug}`}
               className="text-2xl font-semibold hover:underline cursor-pointer leading-tight"
             >
               {props.title}
             </Link>
           </h3>
           <h4 className="mb-4 md:mb-0 text-lg">
-            {" "}
             <DateFormatter date={props.date} />
           </h4>
         </div>

@@ -13,8 +13,7 @@ export default function PostPreview({ post }: Props) {
         <CoverImage title={post.title} src={post.imageUrl} slug={post.slug} />
       </div>
       <h3 className="text-3xl mb-3 leading-snug">
-        {/*  TODO: fix href */}
-        <Link href={"/"} className="hover:underline">
+        <Link href={`posts/${post.slug}`} className="hover:underline">
           {post.title}
         </Link>
       </h3>
