@@ -3,7 +3,7 @@ import Intro from "@/app/_components/intro";
 import { getAllPosts } from "@/app/lib/api";
 import HeroPost from "@/app/_components/hero-post";
 import MoreStories from "@/app/_components/more-stories";
-import { Post } from "@/app/interfaces/post";
+import { shuffle } from "@/app/lib/helper";
 
 export default async function Home() {
   const allPosts = await getAllPosts();
@@ -23,18 +23,11 @@ export default async function Home() {
           slug={heroPost.slug}
           excerpt={heroPost.excerpt}
         />
-        {morePosts.length > 0 && <MoreStories posts={morePosts} />}
+
+        {morePosts.length > 0 && (
+          <MoreStories posts={morePosts} homePage={true} />
+        )}
       </Container>
     </main>
   );
-}
-
-function shuffle(array: Post[]) {
-  for (let i = array.length - 1; i > 0; i--) {
-    // Generate a random index from 0 to i
-    const j = Math.floor(Math.random() * (i + 1));
-    // Swap elements using array destructuring
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-  return array;
 }

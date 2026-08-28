@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { type IntialPlaceholderPosts, Post } from "@/app/interfaces/post";
+
 export function generateSlug(title: string): string {
   // 1. Clean up accents and special characters first
   const cleanTitle = title
@@ -67,4 +68,14 @@ export function generateFinalizedPosts(
     };
   });
   return postsWithImages;
+}
+
+export function shuffle(array: Post[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    // Generate a random index from 0 to i
+    const j = Math.floor(Math.random() * (i + 1));
+    // Swap elements using array destructuring
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
 }

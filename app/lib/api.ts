@@ -3,7 +3,7 @@ import { db } from "@/app/lib/db";
 
 export async function getAllPosts(): Promise<Post[]> {
   try {
-    const { rows } = await db.query("SELECT * FROM posts");
+    const { rows } = await db.query("SELECT * FROM posts ORDER BY date DESC");
     // will have to do this for every call
     const posts: Post[] = rows.map((row) => ({
       id: row.id,
@@ -19,7 +19,7 @@ export async function getAllPosts(): Promise<Post[]> {
         picture: row.author_picture,
       },
     }));
-    console.log(posts);
+    // console.log(posts);
     return posts;
   } catch (e) {
     console.error(e);

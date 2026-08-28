@@ -2,10 +2,10 @@ import Avatar from "@/app/_components/avatar";
 import Container from "@/app/_components/container";
 import CoverImage from "@/app/_components/cover-image";
 import DateFormatter from "@/app/_components/date-formatter";
+import PostHeader from "@/app/_components/post-header";
 import { Post } from "@/app/interfaces/post";
 import { getAllPosts, getPostBySlug } from "@/app/lib/api";
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 type Params = {
@@ -18,12 +18,7 @@ export default async function Page(props: Params) {
   return (
     <main>
       <Container>
-        <h2 className="text-2xl md:text-4xl font-bold tracking-tight mid:tracking-tigher leading-tight mb-20 mt-8 flex items-center">
-          <Link href={"/"} className="hover:underline">
-            Blog
-          </Link>
-          .
-        </h2>
+        <PostHeader />
         <h1 className="text-7xl font-black pb-5">{post.title}</h1>
         <div className="mb-8 md:mb-16 sm:mx-0">
           <Avatar picture={post.author.picture} author={post.author.name} />
