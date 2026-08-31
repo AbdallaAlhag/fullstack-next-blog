@@ -23,8 +23,8 @@ export default async function Page({ searchParams }: Props) {
     <main>
       <Container>
         <PostHeader />
-        <Pagination totalPages={totalPages} />
         {posts.length > 0 && <MoreStories posts={posts} />}
+        <Pagination totalPages={totalPages} />
       </Container>
     </main>
   );

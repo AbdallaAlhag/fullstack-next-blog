@@ -15,7 +15,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
   };
 
   return (
-    <div className="flex gap-4 items-center my-4">
+    <div className="flex justify-center gap-4 items-center mb-25">
       <Link
         href={createPageURL(currentPage - 1)}
         className={`px-3 py-1 border rounded ${currentPage <= 1 ? "pointer-events-none opacity-50" : ""}`}
@@ -28,7 +28,7 @@ export default function Pagination({ totalPages }: { totalPages: number }) {
       </span>
       <Link
         href={createPageURL(currentPage + 1)}
-        className={`px-3 py-1 border rounded ${currentPage <= 1 ? "pointer-events-none opacity-50" : ""}`}
+        className={`px-3 py-1 border rounded ${currentPage >= totalPages ? "pointer-events-none opacity-50" : ""}`}
         aria-disabled={currentPage >= totalPages}
       >
         Next
