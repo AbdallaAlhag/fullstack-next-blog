@@ -1,4 +1,5 @@
 import Image from "next/image";
+import defaultPfp from "@/public/Default_pfp.jpg";
 type Props = {
   picture: string;
   author: string;
@@ -7,7 +8,7 @@ export default function Avatar({ picture, author }: Props) {
   return (
     <div className="flex items-center">
       <Image
-        src={picture}
+        src={picture || defaultPfp}
         width={50}
         height={50}
         alt={`${author} profile picture`}

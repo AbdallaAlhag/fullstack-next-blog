@@ -1,4 +1,5 @@
 import { type Post } from "@/app/interfaces/post";
+import { type User } from "@/app/interfaces/user";
 import { db } from "@/app/lib/db";
 
 interface GetPostWithLimitsProps {
@@ -109,5 +110,16 @@ export async function getTotalPages(limit: number) {
   } catch (error) {
     console.error("Database Error:", error);
     throw new Error("Failed to fetch total number of pages.");
+  }
+}
+
+export async function getUser(email: string): Promise<User | null> {
+  try {
+    const data = await db.query(`SELECT* FROM users where email = $1`, [email]);
+    if (!data || data.rows.length === 0) return null;
+    return data.rows[0] as User;
+  } catch (error) {
+    console.error("Database Error:", error);
+    throw error;
   }
 }
