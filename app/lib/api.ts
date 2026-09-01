@@ -1,6 +1,7 @@
 import { type Post } from "@/app/interfaces/post";
 import { type User } from "@/app/interfaces/user";
 import { db } from "@/app/lib/db";
+import bcrypt from "bcrypt";
 
 interface GetPostWithLimitsProps {
   limit: number;
@@ -120,6 +121,27 @@ export async function getUser(email: string): Promise<User | null> {
     return data.rows[0] as User;
   } catch (error) {
     console.error("Database Error:", error);
+    throw error;
+  }
+}
+
+type createUserProps = {
+  name: string;
+  email: string;
+  password: string;
+};
+export async function createUser(userData: createUserProps) {
+  const { name, email, password } = userData;
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  try {
+    const result = await db.query(
+      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3) RETURNING id, name, email, created_at`,
+      [name, email, hashedPassword],
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Database error inside createUser:", error);
     throw error;
   }
 }
