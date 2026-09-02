@@ -2,13 +2,13 @@
 
 import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
-import {
-  SignupFormSchema,
-  FormState,
-} from "@/app/interfaces/signup-form-schema";
+import { SignupFormSchema, FormState } from "@/app/interfaces/definitions";
 import z from "zod";
 import { createUser } from "./api";
 import { redirect } from "next/navigation";
+import { createSession } from "./session";
+import { cookies } from "next/headers";
+import { deleteSession } from "@/app/lib/session";
 // ...
 
 export async function authenticate(
@@ -52,9 +52,14 @@ export async function signup(state: FormState, formData: FormData) {
         message: "An error occurred while creating your account.",
       };
     }
+    await createSession(user.id);
   } catch (error) {
     return { message: "Database error: Failed to create user." };
   }
 
-  redirect("/posts");
+  redirect("/");
+}
+export async function logout() {
+  await deleteSession();
+  redirect("/login");
 }
