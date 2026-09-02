@@ -145,3 +145,62 @@ export async function createUser(userData: createUserProps) {
     throw error;
   }
 }
+
+type createPostProps = {
+  author_name: string;
+  author_picture: string;
+  body: string;
+  excerpt: string;
+  image_url: string;
+  slug: string;
+  title: string;
+  user_id: number;
+};
+
+export async function createPost(rawData: createPostProps) {
+  const {
+    author_name,
+    author_picture,
+    body,
+    excerpt,
+    image_url,
+    slug,
+    title,
+    user_id,
+  } = rawData;
+
+  try {
+    const result = await db.query(
+      `INSERT INTO posts ( author_name,
+    author_picture,
+    body,
+    excerpt,
+    image_url,
+    slug,
+    title,
+    user_id,
+) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING author_name,
+        author_picture,
+        body,
+        excerpt,
+        image_url,
+        slug,
+        title,
+        user_id,`,
+      [
+        author_name,
+        author_picture,
+        body,
+        excerpt,
+        image_url,
+        slug,
+        title,
+        user_id,
+      ],
+    );
+    return result.rows[0];
+  } catch (error) {
+    console.error("Database error inside createPost:", error);
+    throw error;
+  }
+}

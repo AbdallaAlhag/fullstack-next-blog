@@ -7,8 +7,8 @@ import z from "zod";
 import { createUser } from "./api";
 import { redirect } from "next/navigation";
 import { createSession } from "./session";
-import { cookies } from "next/headers";
 import { deleteSession } from "@/app/lib/session";
+import { revalidatePath } from "next/cache";
 // ...
 
 export async function authenticate(
@@ -62,4 +62,50 @@ export async function signup(state: FormState, formData: FormData) {
 export async function logout() {
   await deleteSession();
   redirect("/login");
+}
+type createPostProps = {
+  author_name: string;
+  author_picture: string;
+  body: string;
+  excerpt: string;
+  image_url: string;
+  slug: string;
+  title: string;
+  user_id: number;
+};
+export async function createPost(rawData: createPostProps) {
+  // Extract fields matching your schema
+  // const rawData = {
+  //   author_name: formData.get("author_name"),
+  //   author_picture: formData.get("author_picture"),
+  //   body: formData.get("body"),
+  //   excerpt: formData.get("excerpt"),
+  //   image_url: formData.get("image_url"),
+  //   slug: formData.get("slug"),
+  //   title: formData.get("title"),
+  //   user_id: Number(formData.get("user_id")), // Foreign key references users(id)
+  // };
+
+  // Validate required fields
+  if (
+    !rawData.author_name ||
+    !rawData.body ||
+    !rawData.slug ||
+    !rawData.title ||
+    !rawData.user_id
+  ) {
+    return { error: "Missing required fields" };
+  }
+
+  try {
+    // Insert into database logic goes here (e.g., Prisma, Drizzle, pg)
+    // UUID (id) and TIMESTAMPTZ (date) will generate automatically at database level
+
+    createPost(rawData);
+
+    revalidatePath("/posts");
+    return { success: true };
+  } catch (err) {
+    return { error: "Failed to create post" };
+  }
 }
