@@ -6,8 +6,6 @@ import { SignupFormSchema, FormState } from "@/app/interfaces/definitions";
 import z from "zod";
 import { createUser } from "./api";
 import { redirect } from "next/navigation";
-import { createSession } from "./session";
-import { deleteSession } from "@/app/lib/session";
 import { revalidatePath } from "next/cache";
 // ...
 
@@ -52,7 +50,6 @@ export async function signup(state: FormState, formData: FormData) {
         message: "An error occurred while creating your account.",
       };
     }
-    await createSession(user.id);
   } catch (error) {
     return { message: "Database error: Failed to create user." };
   }
@@ -60,7 +57,6 @@ export async function signup(state: FormState, formData: FormData) {
   redirect("/");
 }
 export async function logout() {
-  await deleteSession();
   redirect("/login");
 }
 type createPostProps = {

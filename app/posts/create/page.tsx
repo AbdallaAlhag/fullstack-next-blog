@@ -1,11 +1,10 @@
 import PostForm from "@/app/_components/post-form";
-import { verifySession } from "@/app/lib/dal";
+import { auth } from "@/auth";
 
 export default async function CreatePostPage() {
-  const user = await verifySession();
-
+  const session = await auth();
   // Guard clause if user is not authenticated
-  if (user.isAuth == false || !user) {
+  if (!session?.user) {
     return (
       <main style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
         <h1>Access Denied</h1>
@@ -32,7 +31,7 @@ export default async function CreatePostPage() {
       </header>
 
       {/* Renders the client-side form component, injecting the server-validated user ID */}
-      <PostForm currentUserId={user.userId} />
+      <PostForm currentUserId={Number(session.user.id)} />
     </main>
   );
 }

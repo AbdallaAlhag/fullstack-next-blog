@@ -1,12 +1,10 @@
 import { signOut } from "@/auth";
-import { deleteSession } from "@/app/lib/session";
 
 export default function Pages() {
   return (
     <form
       action={async () => {
         "use server";
-        await deleteSession();
         await signOut({ redirectTo: "/" });
       }}
     >

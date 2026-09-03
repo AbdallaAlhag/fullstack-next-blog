@@ -26,9 +26,3 @@ export type FormState =
       message?: string;
     }
   | undefined;
-
-export interface SessionPayload extends JWTPayload {
-  userId: string;
-  role: string;
-  expiresAt: Date | string | number;
-}
