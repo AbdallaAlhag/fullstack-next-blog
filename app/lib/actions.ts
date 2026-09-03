@@ -4,7 +4,7 @@ import { signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { SignupFormSchema, FormState } from "@/app/interfaces/definitions";
 import z from "zod";
-import { createUser } from "./api";
+import { createPost, createUser } from "./api";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 // ...
@@ -60,16 +60,11 @@ export async function logout() {
   redirect("/login");
 }
 type createPostProps = {
-  author_name: string;
-  author_picture: string;
   body: string;
-  excerpt: string;
   image_url: string;
-  slug: string;
   title: string;
-  user_id: number;
 };
-export async function createPost(rawData: createPostProps) {
+export async function createUserPost(rawData: createPostProps) {
   // Extract fields matching your schema
   // const rawData = {
   //   author_name: formData.get("author_name"),
@@ -83,13 +78,7 @@ export async function createPost(rawData: createPostProps) {
   // };
 
   // Validate required fields
-  if (
-    !rawData.author_name ||
-    !rawData.body ||
-    !rawData.slug ||
-    !rawData.title ||
-    !rawData.user_id
-  ) {
+  if (!rawData.body || !rawData.title) {
     return { error: "Missing required fields" };
   }
 
@@ -97,11 +86,14 @@ export async function createPost(rawData: createPostProps) {
     // Insert into database logic goes here (e.g., Prisma, Drizzle, pg)
     // UUID (id) and TIMESTAMPTZ (date) will generate automatically at database level
 
-    createPost(rawData);
+    const result = createPost(rawData);
+    console.log(result);
 
     revalidatePath("/posts");
+    // redirect("/posts");
     return { success: true };
   } catch (err) {
-    return { error: "Failed to create post" };
+    console.error("Database error inside createPost:", err);
+    throw err;
   }
 }

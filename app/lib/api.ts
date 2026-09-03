@@ -1,7 +1,9 @@
 import { type Post } from "@/app/interfaces/post";
 import { type User } from "@/app/interfaces/user";
 import { db } from "@/app/lib/db";
+import { auth } from "@/auth";
 import bcrypt from "bcrypt";
+import { generateSlug } from "./helper";
 
 interface GetPostWithLimitsProps {
   limit: number;
@@ -147,47 +149,81 @@ export async function createUser(userData: createUserProps) {
 }
 
 type createPostProps = {
-  author_name: string;
-  author_picture: string;
   body: string;
-  excerpt: string;
   image_url: string;
-  slug: string;
   title: string;
-  user_id: number;
 };
 
 export async function createPost(rawData: createPostProps) {
-  const {
-    author_name,
-    author_picture,
-    body,
-    excerpt,
-    image_url,
-    slug,
-    title,
-    user_id,
-  } = rawData;
-
   try {
+    const session = await auth();
+    console.log("session check: ", session);
+    if (!session?.user?.email) {
+      throw new Error("Unauthorized: You must be logged in to create a post.");
+    }
+
+    const userInfo = await getUser(session.user.email);
+    if (!userInfo) {
+      throw new Error("User profile not found.");
+    }
+
+    // Move author_picture to users table later! For now, keep it blank or pull from userInfo
+    const author_picture = "";
+    const { name: author_name } = userInfo;
+    console.log("user info", userInfo);
+    const { id: user_id } = session?.user;
+    const { body, title } = rawData;
+    let { image_url } = rawData;
+
+    // Generate excerpt
+    const segmenter = new Intl.Segmenter("en", { granularity: "sentence" });
+    const segments = Array.from(segmenter.segment(body));
+    let excerpt = segments
+      .slice(0, 3)
+      .map((s) => s.segment.trim())
+      .join(" ");
+
+    if (excerpt.length >= 250) {
+      excerpt = excerpt.slice(0, 250).replace(/\s+\S*$/, "") + "...";
+    }
+
+    // 3. Execute the UUID function properly
+    const postId = crypto.randomUUID();
+    const slugId = postId.slice(0, 6);
+    const slug = `${slugId}-${generateSlug(title)}`;
+    const random3Digit = Math.floor(Math.random() * (999 - 100 + 1)) + 100;
+    if (!image_url || image_url == "" || image_url.length === 0) {
+      image_url = new URL(`https://picsum.photos/id/${random3Digit}/1300/630`)
+        .href;
+    }
+
+    console.log(
+      "values::::",
+      author_name,
+      author_picture,
+      body,
+      excerpt,
+      image_url,
+      slug,
+      title,
+      user_id,
+    );
     const result = await db.query(
-      `INSERT INTO posts ( author_name,
-    author_picture,
-    body,
-    excerpt,
-    image_url,
-    slug,
-    title,
-    user_id,
-) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING author_name,
-        author_picture,
-        body,
-        excerpt,
-        image_url,
-        slug,
-        title,
-        user_id,`,
+      `INSERT INTO posts (
+        id,
+        author_name, 
+        author_picture, 
+        body, 
+        excerpt, 
+        image_url, 
+        slug, 
+        title, 
+        user_id
+      ) 
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+      RETURNING author_name, author_picture, body, excerpt, image_url, slug, title, user_id`,
       [
+        postId,
         author_name,
         author_picture,
         body,
@@ -198,6 +234,7 @@ export async function createPost(rawData: createPostProps) {
         user_id,
       ],
     );
+
     return result.rows[0];
   } catch (error) {
     console.error("Database error inside createPost:", error);

@@ -4,11 +4,10 @@ export const authConfig = {
   pages: {
     signIn: "/login",
   },
-  // what this does is only allow logged in users on certain pages but my current setup has no retrisited pages atm.
   // callbacks: {
   //   authorized({ auth, request: { nextUrl } }) {
   //     const isLoggedIn = !!auth?.user;
-  //     const isOnDashboard = nextUrl.pathname.startsWith("/");
+  //     const isOnDashboard = nextUrl.pathname.startsWith("/create-post");
   //     if (isOnDashboard) {
   //       if (isLoggedIn) return true;
   //       return false; // Redirect unauthenticated users to login page
@@ -18,5 +17,24 @@ export const authConfig = {
   //     return true;
   //   },
   // },
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      // your protected route checks...
+      return !!auth?.user;
+    },
+    // Put your JWT and Session hooks directly here inside authConfig!
+    async jwt({ token, user }) {
+      if (user) {
+        token.sub = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      if (session?.user && token?.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+  },
   providers: [], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
