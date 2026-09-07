@@ -1,10 +1,10 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { auth, signIn } from "@/auth";
 import { AuthError } from "next-auth";
 import { SignupFormSchema, FormState } from "@/app/interfaces/definitions";
 import z from "zod";
-import { createPost, createUser } from "./api";
+import { createPost, createUser, deletePost } from "./api";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 // ...
@@ -95,5 +95,29 @@ export async function createUserPost(rawData: createPostProps) {
   } catch (err) {
     console.error("Database error inside createPost:", err);
     throw err;
+  }
+}
+
+export async function deletePostAction(formData: FormData) {
+  const session = await auth();
+  const userId = Number(session?.user?.id);
+
+  if (!userId) {
+    throw new Error("Unauthorized: You must be logged in to delete a post");
+  }
+
+  const postId = String(formData.get("postId"));
+  if (!postId) {
+    throw new Error("Bad request: Missing post ID.");
+  }
+
+  try {
+    await deletePost(postId, userId);
+
+    // 4. Purge the cached layout trees to immediately update the feed UI
+    revalidatePath("/more-posts");
+    revalidatePath("/my-posts");
+  } catch (error) {
+    console.error("Database deletion error:", error);
   }
 }

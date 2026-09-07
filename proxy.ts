@@ -6,8 +6,8 @@ import { auth } from "./auth";
 export default NextAuth(authConfig).auth;
 
 // 1. Specify protected and public routes
-const protectedRoutes = ["/posts/create"];
-const publicRoutes = ["/login", "/signup", "/"];
+const protectedRoutes = ["/posts/create", "my-posts", "logout"];
+const publicRoutes = ["/login", "/signup", "/", "more-posts", "posts"];
 
 export async function proxy(req: NextRequest) {
   // 2. Check if the current route is protected or public

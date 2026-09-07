@@ -5,8 +5,13 @@ import Link from "next/link";
 interface Props {
   posts: Post[];
   homePage?: boolean;
+  currentUserId?: number;
 }
-export default function MoreStories({ posts, homePage = false }: Props) {
+export default function MoreStories({
+  posts,
+  homePage = false,
+  currentUserId,
+}: Props) {
   return (
     <section className="">
       {homePage && (
@@ -18,7 +23,11 @@ export default function MoreStories({ posts, homePage = false }: Props) {
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-x-16 lg:gap-x-32 gap-y-20 md:gap-y-32 mb-32">
         {posts.map((post: Post) => (
-          <PostPreview key={post.id} post={post} />
+          <PostPreview
+            key={post.id}
+            post={post}
+            isAuthor={currentUserId === post.userId}
+          />
         ))}
       </div>
     </section>

@@ -250,3 +250,22 @@ export async function createPost(rawData: createPostProps) {
     throw error;
   }
 }
+
+export async function deletePost(postId: string, userId: number) {
+  try {
+    // 3. SECURE PARAMETERIZED QUERY:
+    // We add 'WHERE user_id = $2' to ensure users can ONLY delete their own posts.
+    const result = await db.query(
+      `DELETE FROM posts WHERE id = $1 AND user_id = $2`,
+      [postId, userId],
+    );
+
+    // Optional validation check
+    if (result.rowCount === 0) {
+      throw new Error("Unauthorized or Post not found.");
+    }
+  } catch (error) {
+    console.error("Database deletion error:", error);
+    return { error: "Failed to delete the post. Please try again." };
+  }
+}
