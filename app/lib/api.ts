@@ -8,6 +8,7 @@ import { generateSlug } from "./helper";
 interface GetPostWithLimitsProps {
   limit: number;
   page: number;
+  id?: number;
 }
 
 export async function getAllPosts(): Promise<Post[]> {
@@ -73,15 +74,21 @@ export async function getPostBySlug(slug: string): Promise<Post | null> {
 export async function GetPostsWithLimit({
   limit,
   page,
+  id,
 }: GetPostWithLimitsProps) {
   const offset = (page - 1) * limit;
+  const queryParams = [];
+  let queryText = `SELECT * FROM posts`;
+
+  if (id) {
+    queryParams.push(id);
+    queryText += ` Where user_id = $${queryParams.length}`;
+  }
+  queryParams.push(limit, offset);
+  queryText += ` ORDER BY date DESC LIMIT $${queryParams.length - 1} OFFSET $${queryParams.length}`;
 
   try {
-    const { rows } = await db.query(`
-      SELECT * FROM posts
-      ORDER BY date DESC
-      LIMIT ${limit}
-      OFFSET ${offset}`);
+    const { rows } = await db.query(queryText, queryParams);
 
     const posts: Post[] = rows.map((row) => ({
       id: row.id,
@@ -104,9 +111,11 @@ export async function GetPostsWithLimit({
   }
 }
 
-export async function getTotalPages(limit: number) {
+export async function getTotalPages(limit: number, id?: number) {
   try {
-    const data = await db.query(`SELECT COUNT(*) FROM posts`);
+    const data = !id
+      ? await db.query(`SELECT COUNT(*) FROM posts`)
+      : await db.query(`SELECT COUNT (*) FROM posts WHERE user_id = $1`, [id]);
     const totalCount = Number(data.rows[0].count);
 
     return Math.ceil(totalCount / limit);
