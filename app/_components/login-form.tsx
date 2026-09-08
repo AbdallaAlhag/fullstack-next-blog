@@ -21,7 +21,7 @@ export default function LoginForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="email"
             >
-              Email
+              Email (johndoe@gmail.com)
             </label>
             <div className="relative">
               <input
@@ -39,7 +39,7 @@ export default function LoginForm() {
               className="mb-3 mt-5 block text-xs font-medium text-gray-900"
               htmlFor="password"
             >
-              Password
+              Password (password123)
             </label>
             <div className="relative">
               <input
